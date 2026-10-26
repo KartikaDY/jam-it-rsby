@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jam IT RSBY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  /* Dioptimalkan untuk Acer P166HQL (15,6" 1366 x 768): semua ukuran mengikuti tinggi layar, jadi muat tanpa scroll. */
+  :root{--bg1:#090d16;--ink:#eaf2ff;--soft:#9fb0c8;--blue:#6cb2ff;--blue2:#5f90d6;--card:rgba(11,13,18,.58);--line:rgba(108,178,255,.22);--accent:var(--blue);--warn:#ff5c5f}
+  *{box-sizing:border-box;margin:0}
+  html{font-size:clamp(12px,2.1vh,20px)}
+  html,body{min-height:100%}
+  body{
+    font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+    color:var(--ink);background:var(--bg1);
+    min-height:100vh;padding:3vh clamp(16px,4vw,56px);
+    display:flex;justify-content:center;align-items:center;
+    -webkit-font-smoothing:antialiased;
+  }
+  #bg{position:fixed;inset:0;z-index:-1;background:#090d16;overflow:hidden}
+  #bgImg{position:absolute;inset:-6%;background:center/cover no-repeat;filter:blur(22px) saturate(.8);opacity:0;transition:opacity 1.6s ease}
+  #bgImg.on{opacity:1}
+  #bg::after{content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(55% 42% at 50% 38%,rgba(70,140,255,.10),transparent 72%),
+      radial-gradient(120% 90% at 50% 50%,rgba(4,8,18,.35),rgba(4,8,18,.85)),
+      rgba(6,10,20,.62)}
+  main{width:100%;max-width:1180px;display:flex;flex-direction:column;gap:3vh}
+
+  h1{text-align:center;font-weight:500;font-size:1.9rem;line-height:1.2;letter-spacing:.14em;color:var(--blue)}
+  .cursor{display:inline-block;width:.5em;height:.95em;margin-left:.35em;vertical-align:-.1em;background:var(--blue);animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  .clock{display:flex;justify-content:center;align-items:baseline;
+    font-weight:600;font-size:min(34vh,18.5vw);line-height:.95;letter-spacing:-.035em;
+    font-variant-numeric:tabular-nums;color:#f2f7ff;text-shadow:0 0 80px rgba(80,150,255,.35)}
+  .clock .c{color:var(--blue);opacity:.55;margin:0 .03em;position:relative;top:-.05em}
+  .clock .s{color:var(--blue)}
+  .date{text-align:center;font-weight:300;font-size:1.45rem;letter-spacing:.07em;color:#cfdcf2;margin-top:-1vh}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:2vh clamp(12px,1.6vw,22px)}
+  @media(max-width:760px){.grid{grid-template-columns:1fr}}
+
+  .panel{backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:background .5s,border-color .5s}
+  .panel header{display:flex;justify-content:space-between;align-items:center;padding:.55rem 1.3rem;border-bottom:1px solid var(--line);font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.72rem;color:var(--blue2)}
+  .panel header span:last-child{display:flex;align-items:center;gap:.5rem}
+  .panel header i{width:.45rem;height:.45rem;border-radius:50%;background:var(--blue)}
+  .body{padding:1.15rem 1.4rem 1.25rem}
+
+  .lbl{color:var(--soft);font-size:.9rem;margin-bottom:.5rem}
+  .cd{font-size:2.9rem;font-weight:600;line-height:1.1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:#f2f7ff;transition:color .5s}
+  .bar{height:.4rem;margin-top:1rem;background:var(--line);-webkit-mask:repeating-linear-gradient(90deg,#000 0 7px,transparent 7px 10px);mask:repeating-linear-gradient(90deg,#000 0 7px,transparent 7px 10px)}
+  .bar b{display:block;height:100%;width:0;background:var(--blue);transition:width 1s linear,background .5s}
+  .hint{margin-top:.7rem;color:var(--soft);font-size:.82rem;line-height:1.5}
+
+  /* 2 menit terakhir sebelum jam pulang */
+  #cdCard.warn{border-color:var(--warn);background:color-mix(in srgb,var(--warn) 16%,var(--card))}
+  #cdCard.warn header{color:var(--warn)}
+  #cdCard.warn header i{background:var(--warn);animation:blink .8s steps(1) infinite}
+  #cdCard.warn .cd,#cdCard.warn .lbl,#cdCard.warn .hint{color:var(--warn)}
+  #cdCard.warn .bar b{background:var(--warn)}
+
+  .w-main{display:flex;align-items:center;gap:1rem}
+  .w-ico{font-size:2.6rem;line-height:1}
+  .w-temp{font-size:2.9rem;font-weight:300;line-height:1;letter-spacing:-.02em;color:#f2f7ff}
+  .w-desc{margin-top:.3rem;font-size:.9rem;color:var(--soft)}
+  .w-list{display:grid;grid-template-columns:repeat(4,auto);justify-content:space-between;gap:.7rem 1rem;margin-top:1rem;font-size:.72rem;color:var(--soft)}
+  @media(max-width:560px){.w-list{grid-template-columns:repeat(2,auto)}}
+  .w-list b{display:block;margin-top:.15rem;color:var(--ink);font-size:.92rem;font-weight:400}
+  .next{display:flex;gap:.7rem;margin-top:.9rem;padding-top:.8rem;border-top:1px solid var(--line)}
+  .next div{flex:1;font-size:.72rem;color:var(--soft)}
+  .next b{display:block;margin-top:.15rem;color:var(--ink);font-size:.92rem;font-weight:400}
+
+  footer{text-align:center;color:var(--soft);font-size:.7rem;opacity:.8}
+
+  /* Popup jam pulang: biru navy mewah */
+  .pop{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:20px;
+    background:radial-gradient(70% 60% at 50% 45%,rgba(40,100,220,.28),rgba(2,6,16,.86));
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  .pop.show{display:flex;animation:fade .5s ease both}
+  .pop-card{position:relative;width:min(540px,100%);text-align:center;padding:2.4rem 2rem 2rem;border-radius:22px;
+    background:linear-gradient(165deg,#10264f 0%,#0a1633 55%,#07102a 100%);
+    border:1px solid rgba(120,175,255,.38);
+    box-shadow:0 0 0 6px rgba(90,160,255,.07),0 30px 90px rgba(20,70,200,.45),inset 0 1px 0 rgba(180,215,255,.25);
+    animation:rise .6s cubic-bezier(.2,.8,.2,1) both}
+  .pop-card::before{content:"";position:absolute;inset:8px;border-radius:15px;border:1px solid rgba(120,175,255,.16);pointer-events:none}
+  .pop-ring{width:4.2rem;height:4.2rem;margin:0 auto 1.1rem;border-radius:50%;display:grid;place-items:center;
+    border:1px solid rgba(140,190,255,.55);background:radial-gradient(circle,rgba(70,140,255,.35),rgba(70,140,255,.05) 70%);
+    box-shadow:0 0 36px rgba(70,140,255,.5)}
+  .pop-ring svg{width:2rem;height:2rem;fill:none;stroke:#bcd9ff;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+  .pop h2{font-size:2.1rem;font-weight:600;letter-spacing:.04em;color:#eaf3ff}
+  .pop-time{margin:.4rem 0 .9rem;font-size:4.6rem;font-weight:600;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums;
+    background:linear-gradient(180deg,#ffffff 10%,#8fc2ff 60%,#4a8ff0);-webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 0 22px rgba(80,150,255,.55))}
+  .pop p{color:#a9c3ea;font-size:1rem;line-height:1.6;max-width:30ch;margin:0 auto 1.5rem}
+  .pop button{font:inherit;font-weight:600;font-size:.95rem;letter-spacing:.06em;color:#fff;cursor:pointer;padding:.75rem 2.6rem;border-radius:99px;
+    border:1px solid rgba(160,205,255,.55);background:linear-gradient(180deg,#3f86f0,#2358c9);box-shadow:0 8px 26px rgba(40,100,230,.5)}
+  .pop button:hover{filter:brightness(1.12)}
+  .pop button:focus-visible{outline:2px solid #cfe3ff;outline-offset:3px}
+  @keyframes fade{from{opacity:0}}
+  @keyframes rise{from{opacity:0;transform:translateY(16px) scale(.96)}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="bg" aria-hidden="true"><div id="bgImg"></div></div>
+<main>
+  <h1><span id="greetText">SELAMAT PAGI IT RSBY</span><span class="cursor" aria-hidden="true"></span></h1>
+
+  <div class="clock" role="timer" aria-live="off">
+    <span id="hh">00</span><span class="c">:</span><span id="mm">00</span><span class="c">:</span><span class="s" id="ss">00</span>
+  </div>
+  <p class="date" id="date"></p>
+
+  <div class="grid">
+    <section class="panel" id="cdCard">
+      <header><span>countdown.sh</span><span><i></i><span id="state">running</span></span></header>
+      <div class="body">
+        <div class="lbl" id="cdLabel">Menghitung…</div>
+        <div class="cd" id="cd">--:--:--</div>
+        <div class="bar" aria-hidden="true"><b id="bar"></b></div>
+        <p class="hint" id="cdHint">Jam kerja 08:00 – 17:00</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <header><span>cuaca.json</span><span id="loc">bmkg</span></header>
+      <div class="body" id="weather"><p class="hint" style="margin:0">Memuat cuaca dari BMKG…</p></div>
+    </section>
+  </div>
+
+  <footer>Sumber data cuaca: BMKG (Badan Meteorologi, Klimatologi, dan Geofisika). Foto latar: Unsplash.</footer>
+</main>
+
+<div class="pop" id="pop" role="dialog" aria-modal="true" aria-labelledby="popT">
+  <div class="pop-card">
+    <div class="pop-ring"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5M5.5 10v9.5h13V10M10 19.5v-5h4v5"/></svg></div>
+    <h2 id="popT">Waktunya Pulang</h2>
+    <div class="pop-time" id="popTime">17:00</div>
+    <p>Terima kasih atas kerja keras hari ini, IT RSBY. Simpan pekerjaan Anda dan hati-hati di jalan.</p>
+    <button id="popClose" type="button">Tutup</button>
+  </div>
+</div>
+
+<script>
+/* ===== PENGATURAN ===== */
+const START = 8, END = 17;               // jam masuk & pulang
+const WARN_SECONDS = 120;                // warna berubah 2 menit sebelum pulang
+const ADM4 = "32.76.01.1008";            // Kelurahan Pancoran Mas, Kota Depok (kode wilayah BMKG)
+
+const HARI = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+const BULAN = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+const p2 = n => String(n).padStart(2,"0");
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* Uji coba: tambahkan ?jam=16:57:30 di URL untuk mensimulasikan waktu */
+let OFFSET = 0;
+const q = new URLSearchParams(location.search).get("jam");
+if (q && /^\d{1,2}:\d{2}(:\d{2})?$/.test(q)) {
+  const [h,m,s] = q.split(":").map(Number); const t = new Date(); t.setHours(h,m,s||0,0); OFFSET = t - new Date();
+}
+const getNow = () => new Date(Date.now() + OFFSET);
+
+/* Latar belakang: foto gratis dari Unsplash yang tenang (langit, gunung, gradasi),
+   di-blur dan diredupkan agar tampil sederhana. Berganti tiap 2 jam (12 foto).
+   Jika sebuah foto gagal dimuat, otomatis memakai foto cadangan dari Picsum. */
+const UNSPLASH = [
+  "photo-1534796636912-3b95b3ab5986","photo-1419242902214-272b3f66ee7a","photo-1557682250-33bd709cbe85",
+  "photo-1464822759023-fed622ff2c3b","photo-1470071459604-3b5ec3a7fe05","photo-1505118380757-91f5f5632de0",
+  "photo-1550684848-fac1c5b4e853","photo-1507400492013-162706c8c05e","photo-1506744038136-46273834b3fb",
+  "photo-1557683316-973673baf926","photo-1441974231531-c6227db76b6e","photo-1579546929518-9e396f3cc809"
+];
+const bgUrls = i => [
+  "https://images.unsplash.com/" + UNSPLASH[i] + "?auto=format&fit=crop&w=1366&q=55",
+  "https://picsum.photos/seed/rsby-" + i + "/1366/768"
+];
+let bgIdx = -1;
+function applyBg(h){
+  const i = Math.floor(h/2);
+  if (i === bgIdx) return; bgIdx = i;
+  const el = $("bgImg"), urls = bgUrls(i);
+  (function tryNext(n){
+    if (n >= urls.length) return;               // semua gagal: tetap latar gelap polos
+    const img = new Image();
+    img.onload = () => { el.classList.remove("on"); setTimeout(() => { el.style.backgroundImage = "url('" + urls[n] + "')"; el.classList.add("on"); }, 300); };
+    img.onerror = () => tryNext(n + 1);
+    img.src = urls[n];
+  })(0);
+}
+
+function salam(h){
+  if (h >= 4 && h < 11) return "pagi";
+  if (h >= 11 && h < 15) return "siang";
+  if (h >= 15 && h < 18) return "sore";
+  return "malam";
+}
+function at(base, h, addDays){ const d = new Date(base); d.setDate(d.getDate()+addDays); d.setHours(h,0,0,0); return d; }
+function nextWorkStart(now){ let add = 1; while ([0,6].includes(at(now,0,add).getDay())) add++; return at(now, START, add); }
+function fmt(ms){
+  const t = Math.max(0, Math.floor(ms/1000));
+  const d = Math.floor(t/86400), h = Math.floor(t%86400/3600), m = Math.floor(t%3600/60), s = t%60;
+  return (d ? d + " hari " : "") + p2(h) + ":" + p2(m) + ":" + p2(s);
+}
+
+
+/* ===== Popup jam pulang ===== */
+let popupDay = "", popTimer = null;
+function chime(){
+  try{
+    const ac = new (window.AudioContext || window.webkitAudioContext)();
+    [659.25, 880, 1318.5].forEach((f,i) => {
+      const o = ac.createOscillator(), g = ac.createGain(), t = ac.currentTime + i*.28;
+      o.type = "sine"; o.frequency.value = f;
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.12, t+.03); g.gain.exponentialRampToValueAtTime(.0001, t+1.2);
+      o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+1.3);
+    });
+  }catch(e){}
+}
+function showPop(){
+  $("popTime").textContent = p2(END) + ":00";
+  $("pop").classList.add("show");
+  $("popClose").focus({preventScroll:true});
+  chime();
+  clearTimeout(popTimer); popTimer = setTimeout(closePop, 5*60*1000);
+}
+function closePop(){ $("pop").classList.remove("show"); }
+$("popClose").addEventListener("click", closePop);
+$("pop").addEventListener("click", e => { if (e.target.id === "pop") closePop(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") closePop(); });
+
+function tick(){
+  const now = getNow();
+  applyBg(now.getHours());
+  const s = salam(now.getHours());
+  $("greetText").textContent = "SELAMAT " + s.toUpperCase() + " IT RSBY";
+  $("hh").textContent = p2(now.getHours());
+  $("mm").textContent = p2(now.getMinutes());
+  $("ss").textContent = p2(now.getSeconds());
+  $("date").textContent = HARI[now.getDay()] + ", " + now.getDate() + " " + BULAN[now.getMonth()] + " " + now.getFullYear();
+
+  const weekend = [0,6].includes(now.getDay());
+  const start = at(now, START, 0), end = at(now, END, 0);
+  const dayKey = now.toDateString();
+  if (!weekend && now >= end && now - end < 30*60*1000 && popupDay !== dayKey){ popupDay = dayKey; showPop(); }
+  let label, target, pct, hint, warn = false;
+
+  if (!weekend && now >= start && now < end){
+    target = end; pct = (now - start) / (end - start) * 100;
+    if (end - now <= WARN_SECONDS * 1000){
+      warn = true; label = "Hampir jam pulang!";
+      hint = "Sebentar lagi pulang, saatnya merapikan pekerjaan";
+    } else {
+      label = "Jam pulang kerja dalam";
+      hint = Math.round(pct) + "% hari kerja sudah berjalan (08:00 – 17:00)";
+    }
+  } else if (!weekend && now < start){
+    label = "Jam masuk kerja dalam"; target = start; pct = 0; hint = "Masuk pukul 08:00";
+  } else {
+    label = weekend ? "Libur akhir pekan. Masuk kerja lagi dalam" : "Jam kerja selesai. Masuk kerja lagi dalam";
+    target = nextWorkStart(now); pct = weekend ? 0 : 100;
+    hint = "Masuk berikutnya " + HARI[target.getDay()] + " pukul 08:00";
+  }
+  $("cdCard").classList.toggle("warn", warn);
+  $("state").textContent = warn ? "pulang!" : (target === end ? "running" : "standby");
+  $("cdLabel").textContent = label;
+  $("cd").textContent = fmt(target - now);
+  $("bar").style.width = pct + "%";
+  $("cdHint").textContent = hint;
+}
+tick(); setInterval(tick, 1000);
+
+/* ===== Cuaca dari BMKG ===== */
+function ikon(desc, hour){
+  const d = desc.toLowerCase();
+  if (d.includes("petir")) return "⛈️";
+  if (d.includes("ringan") && d.includes("hujan")) return "🌦️";
+  if (d.includes("hujan")) return "🌧️";
+  if (d.includes("kabut") || d.includes("kabur") || d.includes("asap")) return "🌫️";
+  if (d.includes("cerah berawan")) return hour >= 18 || hour < 6 ? "☁️" : "🌤️";
+  if (d.includes("berawan")) return "☁️";
+  if (d.includes("cerah")) return hour >= 18 || hour < 6 ? "🌙" : "☀️";
+  return "🌡️";
+}
+
+async function fetchBMKG(){
+  const urls = ["/api/cuaca?adm4=" + ADM4, "https://api.bmkg.go.id/publik/prakiraan-cuaca?adm4=" + ADM4];
+  for (const u of urls){
+    try { const r = await fetch(u); if (r.ok) return await r.json(); } catch(e){}
+  }
+  throw new Error("BMKG tidak dapat diakses");
+}
+
+async function loadWeather(){
+  try{
+    const j = await fetchBMKG();
+    const lok = j.lokasi || (j.data && j.data[0] && j.data[0].lokasi) || {};
+    const list = ((j.data && j.data[0] && j.data[0].cuaca) || []).flat().map(e => ({
+      ...e, time: new Date(String(e.utc_datetime).replace(" ","T") + "Z")
+    })).sort((a,b) => a.time - b.time);
+    if (!list.length) throw new Error("kosong");
+
+    const nowMs = Date.now();
+    let ci = 0, best = Infinity;
+    list.forEach((e,i) => { const d = Math.abs(e.time - nowMs); if (d < best){ best = d; ci = i; } });
+    const c = list[ci];
+    const today = new Date().toDateString();
+    const todayList = list.filter(e => e.time.toDateString() === today);
+    const temps = (todayList.length ? todayList : [c]).map(e => Number(e.t));
+    const rain = todayList.some(e => String(e.weather_desc).toLowerCase().includes("hujan"));
+    const next = list.slice(ci + 1, ci + 4);
+
+    $("loc").textContent = lok.desa ? [lok.desa, lok.kotkab].filter(Boolean).join(", ") : "bmkg";
+    $("weather").innerHTML =
+      '<div class="w-main"><div class="w-ico">' + ikon(c.weather_desc, c.time.getHours()) + '</div><div><div class="w-temp">' + Math.round(c.t) +
+      '°C</div><div class="w-desc">' + esc(c.weather_desc) + '</div></div></div>' +
+      '<div class="w-list">' +
+      '<div>Kelembapan<b>' + esc(c.hu) + '%</b></div>' +
+      '<div>Suhu hari ini<b>' + Math.min(...temps) + '° – ' + Math.max(...temps) + '°C</b></div>' +
+      '<div>Angin<b>' + Math.round(c.ws) + ' km/j</b></div>' +
+      '<div>Potensi hujan<b>' + (rain ? "Ada hari ini" : "Tidak ada") + '</b></div>' +
+      '</div>' +
+      (next.length ? '<div class="next">' + next.map(e =>
+        '<div>' + p2(e.time.getHours()) + ':00<b>' + ikon(e.weather_desc, e.time.getHours()) + ' ' + Math.round(e.t) + '°</b></div>').join("") + '</div>' : "");
+  }catch(e){
+    $("weather").innerHTML = '<p class="hint">Data BMKG belum dapat dimuat. Muat ulang halaman, atau periksa kode wilayah (ADM4) di index.html.</p>';
+  }
+}
+loadWeather(); setInterval(loadWeather, 30*60*1000);
+</script>
+</body>
+</html>
