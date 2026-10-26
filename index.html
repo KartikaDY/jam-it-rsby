@@ -21,16 +21,14 @@
     -webkit-font-smoothing:antialiased;
   }
   #bg{position:fixed;inset:0;z-index:-1;background:#090d16;overflow:hidden}
-  .bglayer{position:absolute;inset:-2%;background:center/cover no-repeat;opacity:0;transition:opacity 1.6s ease;filter:blur(3px) saturate(.95)}
+  .bglayer{position:absolute;inset:-2%;background:center/cover no-repeat;opacity:0;transition:opacity 1.6s ease;filter:blur(2px) saturate(.95)}
   .bglayer.on{opacity:1}
-  .bglayer video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s ease}
-  .bglayer video.on{opacity:1}
-  /* lapisan gelap tipis agar teks tetap terbaca, tapi video masih jelas terlihat */
+  /* lapisan gelap tipis agar teks tetap terbaca, tapi gambar masih jelas terlihat */
   #bg::after{content:"";position:absolute;inset:0;pointer-events:none;
     background:
       radial-gradient(55% 42% at 50% 38%,rgba(70,140,255,.08),transparent 72%),
       radial-gradient(120% 95% at 50% 50%,rgba(4,8,18,.10),rgba(4,8,18,.68)),
-      rgba(6,10,20,.28)}
+      rgba(6,10,20,.36)}
   main{width:100%;max-width:1180px;display:flex;flex-direction:column;gap:3vh}
 
   h1{text-align:center;font-weight:600;font-size:3rem;line-height:1.15;letter-spacing:.12em;color:var(--blue);text-shadow:0 2px 22px rgba(0,0,0,.7),0 0 40px rgba(60,130,255,.35)}
@@ -135,7 +133,7 @@
     </section>
   </div>
 
-  <footer>Sumber data cuaca: BMKG (Badan Meteorologi, Klimatologi, dan Geofisika). Video latar: Pexels. IT RSBY 2026.</footer>
+  <footer>Sumber data cuaca: BMKG (Badan Meteorologi, Klimatologi, dan Geofisika). Foto latar: Pexels dan Unsplash.</footer>
 </main>
 
 <div class="pop" id="pop" role="dialog" aria-modal="true" aria-labelledby="popT">
@@ -143,7 +141,7 @@
     <div class="pop-ring"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5M5.5 10v9.5h13V10M10 19.5v-5h4v5"/></svg></div>
     <h2 id="popT">Waktunya Pulang</h2>
     <div class="pop-time" id="popTime">17:00</div>
-    <p>Terima kasih atas kerja keras hari ini, IT RSBY. Selamat pulang dan hati-hati di jalan.</p>
+    <p>Terima kasih atas kerja keras hari ini, IT RSBY. Simpan pekerjaan Anda dan hati-hati di jalan.</p>
     <button id="popClose" type="button">Tutup</button>
   </div>
 </div>
@@ -168,57 +166,54 @@ if (q && /^\d{1,2}:\d{2}(:\d{2})?$/.test(q)) {
 }
 const getNow = () => new Date(Date.now() + OFFSET);
 
-/* Latar belakang: video gratis dari Pexels (galaxy dan alam), berganti tiap 1 jam.
-   Selang-seling galaxy (jam genap) dan alam (jam ganjil); 12 video dipakai bergantian.
-   Jika file video gagal dimuat, dicoba versi lain, lalu tampil gambar diamnya. */
-const VIDEOS = [
-  3194277,  // galaxy: nebula
-  2711145,  // alam: kabut pegunungan
-  13250699, // galaxy: Bima Sakti
-  4527574,  // alam: kabut di lereng hijau
-  2646392,  // galaxy: langit penuh bintang
-  6394054,  // alam: air terjun hutan
-  5884322,  // galaxy: malam berbintang
-  4527568,  // alam: awan di pegunungan
-  9440173,  // galaxy: ruang angkasa
-  857218,   // alam: air terjun
-  15562120, // galaxy: galaksi berputar
-  8435834   // alam: awan menutupi gunung
+/* Latar belakang: 48 gambar gratis (Pexels dan Unsplash), berganti tiap 30 menit.
+   4 tema bergantian: galaxy, teknologi, alam, mural (masing-masing 12 gambar).
+   Angka = ID foto Pexels, teks "photo-..." = ID foto Unsplash.
+   Jika sebuah gambar gagal dimuat, dicoba gambar berikutnya di tema yang sama, lalu gambar cadangan Picsum. */
+const THEME_IMAGES = [
+  // 0: galaxy
+  [34470418,18417414,11427599,13058152,5462241,37142406,25463036,27554462,
+   "photo-1419242902214-272b3f66ee7a","photo-1534796636912-3b95b3ab5986","photo-1462331940025-496dfbfc7564","photo-1444703686981-a3abbc4d4fe3"],
+  // 1: teknologi
+  [17323801,5480781,6466141,5408005,5203849,17489163,17489150,1148820,4508751,37605913,
+   "photo-1518770660439-4636190af475","photo-1550751827-4bd374c3f58b"],
+  // 2: alam
+  [17038850,17038848,36388602,17038851,16831439,17038849,9290337,29030840,16913242,17441819,37792729,12094417],
+  // 3: mural
+  [6502327,2119706,11310849,37759259,4640871,6073484,13765406,3053859,430209,1707640,32439576,706335]
 ];
-const posterUrl = id => "https://images.pexels.com/videos/" + id + "/free-video-" + id + ".jpg?auto=compress&cs=tinysrgb&w=1366";
-function videoSources(id){
-  const out = [];
-  ["hd_1280_720","hd_1920_1080"].forEach(res => [30,25,24].forEach(fps =>
-    out.push("https://videos.pexels.com/video-files/" + id + "/" + id + "-" + res + "_" + fps + "fps.mp4")));
-  out.push("https://www.pexels.com/download/video/" + id + "/");
-  return out;
+const imgUrl = v => typeof v === "number"
+  ? "https://images.pexels.com/photos/" + v + "/pexels-photo-" + v + ".jpeg?auto=compress&cs=tinysrgb&w=1366"
+  : "https://images.unsplash.com/" + v + "?auto=format&fit=crop&w=1366&q=70";
+function slotUrls(slot){            // slot 0..47; tema bergantian tiap slot agar tidak monoton
+  const t = THEME_IMAGES[slot % 4], i = Math.floor(slot / 4) % t.length;
+  return [imgUrl(t[i]), imgUrl(t[(i + 1) % t.length]), "https://picsum.photos/seed/rsby-" + slot + "/1366/768"];
 }
-const reduceMotion = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+const slotOf = d => d.getHours() * 2 + (d.getMinutes() >= 30 ? 1 : 0);
 let bgSlot = -1;
-function applyBg(h){
-  if (h === bgSlot) return; bgSlot = h;
-  const id = VIDEOS[h % VIDEOS.length];
-  const holder = $("bg"), old = Array.from(holder.querySelectorAll(".bglayer"));
-  const layer = document.createElement("div");
-  layer.className = "bglayer";
-  layer.style.backgroundImage = "url('" + posterUrl(id) + "')";
-  if (!reduceMotion){
-    const v = document.createElement("video");
-    v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true; v.preload = "auto";
-    v.setAttribute("muted",""); v.setAttribute("playsinline","");
-    const srcs = videoSources(id); let n = 0;
-    const next = () => {
-      if (n >= srcs.length) return;
-      v.src = srcs[n++]; v.load();
-      const p = v.play(); if (p && p.catch) p.catch(() => {});
-    };
-    v.addEventListener("error", next);
-    v.addEventListener("playing", () => v.classList.add("on"));
-    layer.appendChild(v); next();
-  }
-  holder.appendChild(layer);
-  requestAnimationFrame(() => requestAnimationFrame(() => layer.classList.add("on")));
-  setTimeout(() => old.forEach(el => el.remove()), 1900);
+function loadFirst(urls, done){
+  (function tryNext(n){
+    if (n >= urls.length) return done(null);
+    const img = new Image();
+    img.onload = () => done(urls[n]);
+    img.onerror = () => tryNext(n + 1);
+    img.src = urls[n];
+  })(0);
+}
+function applyBg(d){
+  const slot = slotOf(d);
+  if (slot === bgSlot) return; bgSlot = slot;
+  loadFirst(slotUrls(slot), url => {
+    if (!url || slot !== bgSlot) return;           // semua gagal: tetap latar gelap polos
+    const holder = $("bg"), old = Array.from(holder.querySelectorAll(".bglayer"));
+    const layer = document.createElement("div");
+    layer.className = "bglayer";
+    layer.style.backgroundImage = "url('" + url + "')";
+    holder.appendChild(layer);
+    requestAnimationFrame(() => requestAnimationFrame(() => layer.classList.add("on")));
+    setTimeout(() => old.forEach(el => el.remove()), 1900);
+    loadFirst(slotUrls((slot + 1) % 48), () => {}); // siapkan gambar berikutnya lebih awal
+  });
 }
 
 function salam(h){
@@ -263,7 +258,7 @@ document.addEventListener("keydown", e => { if (e.key === "Escape") closePop(); 
 
 function tick(){
   const now = getNow();
-  applyBg(now.getHours());
+  applyBg(now);
   const s = salam(now.getHours());
   $("greetText").textContent = "SELAMAT " + s.toUpperCase() + " IT RSBY";
   $("hh").textContent = p2(now.getHours());
