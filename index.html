@@ -21,25 +21,28 @@
     -webkit-font-smoothing:antialiased;
   }
   #bg{position:fixed;inset:0;z-index:-1;background:#090d16;overflow:hidden}
-  #bgImg{position:absolute;inset:-6%;background:center/cover no-repeat;filter:blur(22px) saturate(.8);opacity:0;transition:opacity 1.6s ease}
-  #bgImg.on{opacity:1}
-  #bg::after{content:"";position:absolute;inset:0;
+  .bglayer{position:absolute;inset:-2%;background:center/cover no-repeat;opacity:0;transition:opacity 1.6s ease;filter:blur(3px) saturate(.95)}
+  .bglayer.on{opacity:1}
+  .bglayer video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s ease}
+  .bglayer video.on{opacity:1}
+  /* lapisan gelap tipis agar teks tetap terbaca, tapi video masih jelas terlihat */
+  #bg::after{content:"";position:absolute;inset:0;pointer-events:none;
     background:
-      radial-gradient(55% 42% at 50% 38%,rgba(70,140,255,.10),transparent 72%),
-      radial-gradient(120% 90% at 50% 50%,rgba(4,8,18,.35),rgba(4,8,18,.85)),
-      rgba(6,10,20,.62)}
+      radial-gradient(55% 42% at 50% 38%,rgba(70,140,255,.08),transparent 72%),
+      radial-gradient(120% 95% at 50% 50%,rgba(4,8,18,.10),rgba(4,8,18,.68)),
+      rgba(6,10,20,.28)}
   main{width:100%;max-width:1180px;display:flex;flex-direction:column;gap:3vh}
 
-  h1{text-align:center;font-weight:500;font-size:1.9rem;line-height:1.2;letter-spacing:.14em;color:var(--blue)}
+  h1{text-align:center;font-weight:600;font-size:3rem;line-height:1.15;letter-spacing:.12em;color:var(--blue);text-shadow:0 2px 22px rgba(0,0,0,.7),0 0 40px rgba(60,130,255,.35)}
   .cursor{display:inline-block;width:.5em;height:.95em;margin-left:.35em;vertical-align:-.1em;background:var(--blue);animation:blink 1.1s steps(1) infinite}
   @keyframes blink{50%{opacity:0}}
 
   .clock{display:flex;justify-content:center;align-items:baseline;
     font-weight:600;font-size:min(34vh,18.5vw);line-height:.95;letter-spacing:-.035em;
-    font-variant-numeric:tabular-nums;color:#f2f7ff;text-shadow:0 0 80px rgba(80,150,255,.35)}
+    font-variant-numeric:tabular-nums;color:#f2f7ff;text-shadow:0 2px 30px rgba(0,0,0,.55),0 0 80px rgba(80,150,255,.35)}
   .clock .c{color:var(--blue);opacity:.55;margin:0 .03em;position:relative;top:-.05em}
   .clock .s{color:var(--blue)}
-  .date{text-align:center;font-weight:300;font-size:1.45rem;letter-spacing:.07em;color:#cfdcf2;margin-top:-1vh}
+  .date{text-shadow:0 2px 16px rgba(0,0,0,.7);text-align:center;font-weight:300;font-size:1.45rem;letter-spacing:.07em;color:#cfdcf2;margin-top:-1vh}
 
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:2vh clamp(12px,1.6vw,22px)}
   @media(max-width:760px){.grid{grid-template-columns:1fr}}
@@ -106,7 +109,7 @@
 </style>
 </head>
 <body>
-<div id="bg" aria-hidden="true"><div id="bgImg"></div></div>
+<div id="bg" aria-hidden="true"></div>
 <main>
   <h1><span id="greetText">SELAMAT PAGI IT RSBY</span><span class="cursor" aria-hidden="true"></span></h1>
 
@@ -132,7 +135,7 @@
     </section>
   </div>
 
-  <footer>Sumber data cuaca: BMKG (Badan Meteorologi, Klimatologi, dan Geofisika). Foto latar: Unsplash. IT RSBY 2026.</footer>
+  <footer>Sumber data cuaca: BMKG (Badan Meteorologi, Klimatologi, dan Geofisika). Video latar: Pexels.</footer>
 </main>
 
 <div class="pop" id="pop" role="dialog" aria-modal="true" aria-labelledby="popT">
@@ -140,7 +143,7 @@
     <div class="pop-ring"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5M5.5 10v9.5h13V10M10 19.5v-5h4v5"/></svg></div>
     <h2 id="popT">Waktunya Pulang</h2>
     <div class="pop-time" id="popTime">17:00</div>
-    <p>Terima kasih atas kerja keras hari ini, IT RSBY. Selamat pulang dan hati-hati di jalan.</p>
+    <p>Terima kasih atas kerja keras hari ini, IT RSBY. Simpan pekerjaan Anda dan hati-hati di jalan.</p>
     <button id="popClose" type="button">Tutup</button>
   </div>
 </div>
@@ -165,31 +168,57 @@ if (q && /^\d{1,2}:\d{2}(:\d{2})?$/.test(q)) {
 }
 const getNow = () => new Date(Date.now() + OFFSET);
 
-/* Latar belakang: foto gratis dari Unsplash yang tenang (langit, gunung, gradasi),
-   di-blur dan diredupkan agar tampil sederhana. Berganti tiap 2 jam (12 foto).
-   Jika sebuah foto gagal dimuat, otomatis memakai foto cadangan dari Picsum. */
-const UNSPLASH = [
-  "photo-1534796636912-3b95b3ab5986","photo-1419242902214-272b3f66ee7a","photo-1557682250-33bd709cbe85",
-  "photo-1464822759023-fed622ff2c3b","photo-1470071459604-3b5ec3a7fe05","photo-1505118380757-91f5f5632de0",
-  "photo-1550684848-fac1c5b4e853","photo-1507400492013-162706c8c05e","photo-1506744038136-46273834b3fb",
-  "photo-1557683316-973673baf926","photo-1441974231531-c6227db76b6e","photo-1579546929518-9e396f3cc809"
+/* Latar belakang: video gratis dari Pexels (galaxy dan alam), berganti tiap 1 jam.
+   Selang-seling galaxy (jam genap) dan alam (jam ganjil); 12 video dipakai bergantian.
+   Jika file video gagal dimuat, dicoba versi lain, lalu tampil gambar diamnya. */
+const VIDEOS = [
+  3194277,  // galaxy: nebula
+  2711145,  // alam: kabut pegunungan
+  13250699, // galaxy: Bima Sakti
+  4527574,  // alam: kabut di lereng hijau
+  2646392,  // galaxy: langit penuh bintang
+  6394054,  // alam: air terjun hutan
+  5884322,  // galaxy: malam berbintang
+  4527568,  // alam: awan di pegunungan
+  9440173,  // galaxy: ruang angkasa
+  857218,   // alam: air terjun
+  15562120, // galaxy: galaksi berputar
+  8435834   // alam: awan menutupi gunung
 ];
-const bgUrls = i => [
-  "https://images.unsplash.com/" + UNSPLASH[i] + "?auto=format&fit=crop&w=1366&q=55",
-  "https://picsum.photos/seed/rsby-" + i + "/1366/768"
-];
-let bgIdx = -1;
+const posterUrl = id => "https://images.pexels.com/videos/" + id + "/free-video-" + id + ".jpg?auto=compress&cs=tinysrgb&w=1366";
+function videoSources(id){
+  const out = [];
+  ["hd_1280_720","hd_1920_1080"].forEach(res => [30,25,24].forEach(fps =>
+    out.push("https://videos.pexels.com/video-files/" + id + "/" + id + "-" + res + "_" + fps + "fps.mp4")));
+  out.push("https://www.pexels.com/download/video/" + id + "/");
+  return out;
+}
+const reduceMotion = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+let bgSlot = -1;
 function applyBg(h){
-  const i = Math.floor(h/2);
-  if (i === bgIdx) return; bgIdx = i;
-  const el = $("bgImg"), urls = bgUrls(i);
-  (function tryNext(n){
-    if (n >= urls.length) return;               // semua gagal: tetap latar gelap polos
-    const img = new Image();
-    img.onload = () => { el.classList.remove("on"); setTimeout(() => { el.style.backgroundImage = "url('" + urls[n] + "')"; el.classList.add("on"); }, 300); };
-    img.onerror = () => tryNext(n + 1);
-    img.src = urls[n];
-  })(0);
+  if (h === bgSlot) return; bgSlot = h;
+  const id = VIDEOS[h % VIDEOS.length];
+  const holder = $("bg"), old = Array.from(holder.querySelectorAll(".bglayer"));
+  const layer = document.createElement("div");
+  layer.className = "bglayer";
+  layer.style.backgroundImage = "url('" + posterUrl(id) + "')";
+  if (!reduceMotion){
+    const v = document.createElement("video");
+    v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true; v.preload = "auto";
+    v.setAttribute("muted",""); v.setAttribute("playsinline","");
+    const srcs = videoSources(id); let n = 0;
+    const next = () => {
+      if (n >= srcs.length) return;
+      v.src = srcs[n++]; v.load();
+      const p = v.play(); if (p && p.catch) p.catch(() => {});
+    };
+    v.addEventListener("error", next);
+    v.addEventListener("playing", () => v.classList.add("on"));
+    layer.appendChild(v); next();
+  }
+  holder.appendChild(layer);
+  requestAnimationFrame(() => requestAnimationFrame(() => layer.classList.add("on")));
+  setTimeout(() => old.forEach(el => el.remove()), 1900);
 }
 
 function salam(h){
