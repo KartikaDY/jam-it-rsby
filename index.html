@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   /* Dioptimalkan untuk Acer P166HQL (15,6" 1366 x 768): semua ukuran mengikuti tinggi layar, jadi muat tanpa scroll. */
-  :root{--bg1:#090d16;--ink:#eaf2ff;--soft:#9fb0c8;--blue:#6cb2ff;--blue2:#5f90d6;--card:rgba(11,13,18,.58);--line:rgba(108,178,255,.22);--accent:var(--blue);--warn:#ff5c5f}
+  :root{--bg1:#090d16;--ink:#efeaff;--soft:#b8b2d4;--ac:#c9bcff;--ac2:#a396e0;--clock:#f6f2ff;--date:#ddd6f3;--glow:rgba(150,125,255,.38);--tint:rgba(140,110,255,.10);--card:rgba(11,13,18,.58);--line:rgba(201,188,255,.26);--warn:#ff5c5f}
   *{box-sizing:border-box;margin:0}
   html{font-size:clamp(12px,2.1vh,20px)}
   html,body{min-height:100%}
@@ -26,35 +26,35 @@
   /* lapisan gelap tipis agar teks tetap terbaca, tapi gambar masih jelas terlihat */
   #bg::after{content:"";position:absolute;inset:0;pointer-events:none;
     background:
-      radial-gradient(55% 42% at 50% 38%,rgba(70,140,255,.08),transparent 72%),
+      radial-gradient(55% 42% at 50% 38%,var(--tint),transparent 72%),
       radial-gradient(120% 95% at 50% 50%,rgba(4,8,18,.10),rgba(4,8,18,.68)),
       rgba(6,10,20,.36)}
   main{width:100%;max-width:1180px;display:flex;flex-direction:column;gap:3vh}
 
-  h1{text-align:center;font-weight:600;font-size:3rem;line-height:1.15;letter-spacing:.12em;color:var(--blue);text-shadow:0 2px 22px rgba(0,0,0,.7),0 0 40px rgba(60,130,255,.35)}
-  .cursor{display:inline-block;width:.5em;height:.95em;margin-left:.35em;vertical-align:-.1em;background:var(--blue);animation:blink 1.1s steps(1) infinite}
+  h1{text-align:center;font-weight:600;font-size:3rem;line-height:1.15;letter-spacing:.12em;color:var(--ac);text-shadow:0 2px 22px rgba(0,0,0,.7),0 0 40px var(--glow)}
+  .cursor{display:inline-block;width:.5em;height:.95em;margin-left:.35em;vertical-align:-.1em;background:var(--ac);animation:blink 1.1s steps(1) infinite}
   @keyframes blink{50%{opacity:0}}
 
   .clock{display:flex;justify-content:center;align-items:baseline;
     font-weight:600;font-size:min(34vh,18.5vw);line-height:.95;letter-spacing:-.035em;
-    font-variant-numeric:tabular-nums;color:#f2f7ff;text-shadow:0 2px 30px rgba(0,0,0,.55),0 0 80px rgba(80,150,255,.35)}
-  .clock .c{color:var(--blue);opacity:.55;margin:0 .03em;position:relative;top:-.05em}
-  .clock .s{color:var(--blue)}
-  .date{text-shadow:0 2px 16px rgba(0,0,0,.7);text-align:center;font-weight:300;font-size:1.45rem;letter-spacing:.07em;color:#cfdcf2;margin-top:-1vh}
+    font-variant-numeric:tabular-nums;color:var(--clock);text-shadow:0 2px 30px rgba(0,0,0,.55),0 0 80px var(--glow)}
+  .clock .c{color:var(--ac);opacity:.55;margin:0 .03em;position:relative;top:-.05em}
+  .clock .s{color:var(--ac)}
+  .date{text-shadow:0 2px 16px rgba(0,0,0,.7);text-align:center;font-weight:300;font-size:1.45rem;letter-spacing:.07em;color:var(--date);margin-top:-1vh}
 
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:2vh clamp(12px,1.6vw,22px)}
   @media(max-width:760px){.grid{grid-template-columns:1fr}}
 
   .panel{backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:background .5s,border-color .5s}
-  .panel header{display:flex;justify-content:space-between;align-items:center;padding:.55rem 1.3rem;border-bottom:1px solid var(--line);font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.72rem;color:var(--blue2)}
+  .panel header{display:flex;justify-content:space-between;align-items:center;padding:.55rem 1.3rem;border-bottom:1px solid var(--line);font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.72rem;color:var(--ac2)}
   .panel header span:last-child{display:flex;align-items:center;gap:.5rem}
-  .panel header i{width:.45rem;height:.45rem;border-radius:50%;background:var(--blue)}
+  .panel header i{width:.45rem;height:.45rem;border-radius:50%;background:var(--ac)}
   .body{padding:1.15rem 1.4rem 1.25rem}
 
   .lbl{color:var(--soft);font-size:.9rem;margin-bottom:.5rem}
-  .cd{font-size:2.9rem;font-weight:600;line-height:1.1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:#f2f7ff;transition:color .5s}
+  .cd{font-size:2.9rem;font-weight:600;line-height:1.1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--clock);transition:color .5s}
   .bar{height:.4rem;margin-top:1rem;background:var(--line);-webkit-mask:repeating-linear-gradient(90deg,#000 0 7px,transparent 7px 10px);mask:repeating-linear-gradient(90deg,#000 0 7px,transparent 7px 10px)}
-  .bar b{display:block;height:100%;width:0;background:var(--blue);transition:width 1s linear,background .5s}
+  .bar b{display:block;height:100%;width:0;background:var(--ac);transition:width 1s linear,background .5s}
   .hint{margin-top:.7rem;color:var(--soft);font-size:.82rem;line-height:1.5}
 
   /* 2 menit terakhir sebelum jam pulang */
@@ -66,7 +66,7 @@
 
   .w-main{display:flex;align-items:center;gap:1rem}
   .w-ico{font-size:2.6rem;line-height:1}
-  .w-temp{font-size:2.9rem;font-weight:300;line-height:1;letter-spacing:-.02em;color:#f2f7ff}
+  .w-temp{font-size:2.9rem;font-weight:300;line-height:1;letter-spacing:-.02em;color:var(--clock)}
   .w-desc{margin-top:.3rem;font-size:.9rem;color:var(--soft)}
   .w-list{display:grid;grid-template-columns:repeat(4,auto);justify-content:space-between;gap:.7rem 1rem;margin-top:1rem;font-size:.72rem;color:var(--soft)}
   @media(max-width:560px){.w-list{grid-template-columns:repeat(2,auto)}}
@@ -103,6 +103,7 @@
   .pop button:focus-visible{outline:2px solid #cfe3ff;outline-offset:3px}
   @keyframes fade{from{opacity:0}}
   @keyframes rise{from{opacity:0;transform:translateY(16px) scale(.96)}}
+  h1,.clock,.clock span,.date,.cursor,.panel header,.panel header i,.w-temp,.lbl,.hint{transition:color 1.6s ease,background-color 1.6s ease,text-shadow 1.6s ease}
   @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -189,6 +190,17 @@ function slotUrls(slot){            // slot 0..47; tema bergantian tiap slot aga
   const t = THEME_IMAGES[slot % 4], i = Math.floor(slot / 4) % t.length;
   return [imgUrl(t[i]), imgUrl(t[(i + 1) % t.length]), "https://picsum.photos/seed/rsby-" + slot + "/1366/768"];
 }
+/* Warna teks mengikuti tema gambar: galaxy (amethyst), teknologi (es platinum), alam (hijau sage), mural (rose gold) */
+const PALETTES = [
+  {ac:"#c9bcff", ac2:"#a396e0", clock:"#f6f2ff", date:"#ddd6f3", ink:"#efeaff", soft:"#b8b2d4", line:"rgba(201,188,255,.26)", glow:"rgba(150,125,255,.38)", tint:"rgba(140,110,255,.10)"},
+  {ac:"#9adbe9", ac2:"#6db4c6", clock:"#f1fafd", date:"#d3e7ee", ink:"#eaf6fa", soft:"#a5bfc9", line:"rgba(154,219,233,.26)", glow:"rgba(90,200,230,.34)", tint:"rgba(80,190,225,.10)"},
+  {ac:"#b9e6c6", ac2:"#86bc9b", clock:"#f4fbf5", date:"#d8eadc", ink:"#ecf6ee", soft:"#abc3b1", line:"rgba(185,230,198,.26)", glow:"rgba(120,205,150,.32)", tint:"rgba(110,200,140,.10)"},
+  {ac:"#f4c9ad", ac2:"#d19f84", clock:"#fff6ef", date:"#f0dccf", ink:"#fbefe8", soft:"#cbb5a8", line:"rgba(244,201,173,.28)", glow:"rgba(240,160,125,.34)", tint:"rgba(235,150,115,.10)"}
+];
+function applyPalette(i){
+  const p = PALETTES[i], r = document.documentElement.style;
+  Object.keys(p).forEach(k => r.setProperty("--" + k, p[k]));
+}
 const slotOf = d => d.getHours() * 2 + (d.getMinutes() >= 30 ? 1 : 0);
 let bgSlot = -1;
 function loadFirst(urls, done){
@@ -203,6 +215,7 @@ function loadFirst(urls, done){
 function applyBg(d){
   const slot = slotOf(d);
   if (slot === bgSlot) return; bgSlot = slot;
+  applyPalette(slot % 4);
   loadFirst(slotUrls(slot), url => {
     if (!url || slot !== bgSlot) return;           // semua gagal: tetap latar gelap polos
     const holder = $("bg"), old = Array.from(holder.querySelectorAll(".bglayer"));
