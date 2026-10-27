@@ -16,7 +16,7 @@
   body{
     font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
     color:var(--ink);background:var(--bg1);
-    min-height:100vh;padding:3vh clamp(16px,4vw,56px);
+    min-height:100vh;padding:2.4vh clamp(16px,4vw,56px);
     display:flex;justify-content:center;align-items:center;
     -webkit-font-smoothing:antialiased;
   }
@@ -29,7 +29,7 @@
       radial-gradient(55% 42% at 50% 38%,var(--tint),transparent 72%),
       radial-gradient(120% 95% at 50% 50%,rgba(4,8,18,.10),rgba(4,8,18,.68)),
       rgba(6,10,20,.36)}
-  main{width:100%;max-width:1180px;display:flex;flex-direction:column;gap:3vh}
+  main{width:100%;max-width:1180px;display:flex;flex-direction:column;gap:2.6vh}
 
   h1{text-align:center;font-weight:600;font-size:3rem;line-height:1.15;letter-spacing:.12em;color:var(--ac);text-shadow:0 2px 22px rgba(0,0,0,.7),0 0 40px var(--glow)}
   .cursor{display:inline-block;width:.5em;height:.95em;margin-left:.35em;vertical-align:-.1em;background:var(--ac);animation:blink 1.1s steps(1) infinite}
@@ -46,16 +46,16 @@
   @media(max-width:760px){.grid{grid-template-columns:1fr}}
 
   .panel{backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:background .5s,border-color .5s}
-  .panel header{display:flex;justify-content:space-between;align-items:center;padding:.55rem 1.3rem;border-bottom:1px solid var(--line);font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.72rem;color:var(--ac2)}
+  .panel header{display:flex;justify-content:space-between;align-items:center;padding:.4rem 1.1rem;border-bottom:1px solid var(--line);font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.68rem;color:var(--ac2)}
   .panel header span:last-child{display:flex;align-items:center;gap:.5rem}
   .panel header i{width:.45rem;height:.45rem;border-radius:50%;background:var(--ac)}
-  .body{padding:1.15rem 1.4rem 1.25rem}
+  .body{padding:.8rem 1.2rem .9rem}
 
-  .lbl{color:var(--soft);font-size:.9rem;margin-bottom:.5rem}
-  .cd{font-size:2.9rem;font-weight:600;line-height:1.1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--clock);transition:color .5s}
-  .bar{height:.4rem;margin-top:1rem;background:var(--line);-webkit-mask:repeating-linear-gradient(90deg,#000 0 7px,transparent 7px 10px);mask:repeating-linear-gradient(90deg,#000 0 7px,transparent 7px 10px)}
+  .lbl{color:var(--soft);font-size:.8rem;margin-bottom:.3rem}
+  .cd{font-size:2.15rem;font-weight:600;line-height:1.1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--clock);transition:color .5s}
+  .bar{height:.32rem;margin-top:.65rem;background:var(--line);-webkit-mask:repeating-linear-gradient(90deg,#000 0 7px,transparent 7px 10px);mask:repeating-linear-gradient(90deg,#000 0 7px,transparent 7px 10px)}
   .bar b{display:block;height:100%;width:0;background:var(--ac);transition:width 1s linear,background .5s}
-  .hint{margin-top:.7rem;color:var(--soft);font-size:.82rem;line-height:1.5}
+  .hint{margin-top:.5rem;color:var(--soft);font-size:.74rem;line-height:1.4}
 
   /* 2 menit terakhir sebelum jam pulang */
   #cdCard.warn{border-color:var(--warn);background:color-mix(in srgb,var(--warn) 16%,var(--card))}
@@ -64,16 +64,16 @@
   #cdCard.warn .cd,#cdCard.warn .lbl,#cdCard.warn .hint{color:var(--warn)}
   #cdCard.warn .bar b{background:var(--warn)}
 
-  .w-main{display:flex;align-items:center;gap:1rem}
-  .w-ico{font-size:2.6rem;line-height:1}
-  .w-temp{font-size:2.9rem;font-weight:300;line-height:1;letter-spacing:-.02em;color:var(--clock)}
-  .w-desc{margin-top:.3rem;font-size:.9rem;color:var(--soft)}
-  .w-list{display:grid;grid-template-columns:repeat(4,auto);justify-content:space-between;gap:.7rem 1rem;margin-top:1rem;font-size:.72rem;color:var(--soft)}
+  .w-main{display:flex;align-items:center;gap:.8rem}
+  .w-ico{font-size:2rem;line-height:1}
+  .w-temp{font-size:2.15rem;font-weight:300;line-height:1;letter-spacing:-.02em;color:var(--clock)}
+  .w-desc{margin-top:.2rem;font-size:.8rem;color:var(--soft)}
+  .w-list{display:grid;grid-template-columns:repeat(4,auto);justify-content:space-between;gap:.5rem .8rem;margin-top:.7rem;font-size:.66rem;color:var(--soft)}
   @media(max-width:560px){.w-list{grid-template-columns:repeat(2,auto)}}
-  .w-list b{display:block;margin-top:.15rem;color:var(--ink);font-size:.92rem;font-weight:400}
-  .next{display:flex;gap:.7rem;margin-top:.9rem;padding-top:.8rem;border-top:1px solid var(--line)}
-  .next div{flex:1;font-size:.72rem;color:var(--soft)}
-  .next b{display:block;margin-top:.15rem;color:var(--ink);font-size:.92rem;font-weight:400}
+  .w-list b{display:block;margin-top:.1rem;color:var(--ink);font-size:.82rem;font-weight:400}
+  .next{display:flex;gap:.6rem;margin-top:.6rem;padding-top:.55rem;border-top:1px solid var(--line)}
+  .next div{flex:1;font-size:.66rem;color:var(--soft)}
+  .next b{display:block;margin-top:.1rem;color:var(--ink);font-size:.82rem;font-weight:400}
 
   footer{text-align:center;color:var(--soft);font-size:.7rem;opacity:.8}
 
@@ -103,8 +103,13 @@
   .pop button:focus-visible{outline:2px solid #cfe3ff;outline-offset:3px}
   @keyframes fade{from{opacity:0}}
   @keyframes rise{from{opacity:0;transform:translateY(16px) scale(.96)}}
-  h1,.clock,.clock span,.date,.cursor,.panel header,.panel header i,.w-temp,.lbl,.hint{transition:color 1.6s ease,background-color 1.6s ease,text-shadow 1.6s ease}
-  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  /* Quote berjalan */
+  .quote{overflow:hidden;padding:.5rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+  .qtrack{display:inline-block;white-space:nowrap;padding-left:100%;font-weight:300;font-size:1.2rem;letter-spacing:.03em;color:var(--date);text-shadow:0 2px 14px rgba(0,0,0,.7);will-change:transform}
+  @keyframes qscroll{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+  h1,.clock,.clock span,.qtrack,.date,.cursor,.panel header,.panel header i,.w-temp,.lbl,.hint{transition:color 1.6s ease,background-color 1.6s ease,text-shadow 1.6s ease}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.qtrack{display:block;padding-left:0;white-space:normal;text-align:center}}
 </style>
 </head>
 <body>
@@ -134,15 +139,17 @@
     </section>
   </div>
 
-  <footer>Sumber data cuaca: BMKG (Badan Meteorologi, Klimatologi, dan Geofisika). Foto latar: Pexels dan Unsplash. Team IT RSBY 2026.</footer>
+  <div class="quote" aria-live="off"><span class="qtrack" id="qtext"></span></div>
+
+  <footer>Sumber data cuaca: BMKG (Badan Meteorologi, Klimatologi, dan Geofisika). Foto latar: Pexels dan Unsplash.</footer>
 </main>
 
 <div class="pop" id="pop" role="dialog" aria-modal="true" aria-labelledby="popT">
   <div class="pop-card">
     <div class="pop-ring"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5M5.5 10v9.5h13V10M10 19.5v-5h4v5"/></svg></div>
-    <h2 id="popT">Waktunya Pulang Team IT</h2>
+    <h2 id="popT">Waktunya Pulang</h2>
     <div class="pop-time" id="popTime">17:00</div>
-    <p>Terima kasih atas kerja keras hari ini. Selamat pulang dan hati-hati di jalan.</p>
+    <p>Terima kasih atas kerja keras hari ini, IT RSBY. Simpan pekerjaan Anda dan hati-hati di jalan.</p>
     <button id="popClose" type="button">Tutup</button>
   </div>
 </div>
@@ -201,6 +208,70 @@ function applyPalette(i){
   const p = PALETTES[i], r = document.documentElement.style;
   Object.keys(p).forEach(k => r.setProperty("--" + k, p[k]));
 }
+/* Quote penyemangat kerja: acak, berganti tiap 30 menit (bersamaan dengan gambar latar), teks berjalan pelan */
+const QUOTES = [
+  "Kerja keras hari ini adalah hadiah untuk dirimu di masa depan.",
+  "Mulailah dari yang kecil, konsistenlah, dan hasil besar akan menyusul.",
+  "Setiap masalah yang terselesaikan membuat kita semakin tangguh.",
+  "Pekerjaan yang dilakukan dengan sepenuh hati selalu meninggalkan jejak yang baik.",
+  "Tidak ada jalan pintas menuju keunggulan, yang ada hanya ketekunan.",
+  "Tetap tenang, selesaikan satu per satu, semua tugas pasti terlewati.",
+  "Pelayanan terbaik lahir dari hati yang tulus dan tangan yang cekatan.",
+  "Di balik sistem yang berjalan lancar, ada tim yang bekerja tanpa lelah.",
+  "Hari yang baik dimulai dari niat yang baik.",
+  "Jangan menunggu sempurna untuk memulai, mulailah lalu sempurnakan.",
+  "Kesalahan adalah guru yang jujur, belajarlah darinya lalu melangkah lagi.",
+  "Kerja sama membuat beban terasa ringan dan hasil terasa besar.",
+  "Rapi dalam bekerja, tenang dalam berpikir.",
+  "Satu langkah kecil yang konsisten lebih berharga daripada seribu rencana tanpa tindakan.",
+  "Teknologi membantu manusia, dan kamu yang membuatnya bekerja.",
+  "Bangga pada pekerjaanmu, karena banyak orang terbantu olehnya.",
+  "Sabar dalam proses, disiplin dalam usaha.",
+  "Energi positif di pagi hari menentukan kualitas sepanjang hari.",
+  "Tantangan hari ini adalah pengalaman berharga untuk esok hari.",
+  "Kualitas bukan kebetulan, melainkan hasil dari niat dan ketelitian.",
+  "Istirahat sejenak bukan berhenti, melainkan mengisi tenaga untuk melaju lagi.",
+  "Kamu tidak perlu jadi yang tercepat, cukup terus berjalan dengan benar.",
+  "Setiap sistem yang pulih adalah kemenangan kecil bagi seluruh rumah sakit.",
+  "Ketelitian kecil hari ini mencegah masalah besar esok hari.",
+  "Bekerjalah dengan jujur, hasilnya akan berbicara sendiri.",
+  "Semangat itu menular, mulailah dari dirimu sendiri.",
+  "Percaya pada prosesmu, hasil akan datang pada waktunya.",
+  "Dedikasimu di balik layar membuat semua layanan berjalan lancar.",
+  "Masalah sulit hanyalah kesempatan untuk menunjukkan kemampuan terbaikmu.",
+  "Fokus pada hal yang bisa dikendalikan, selesaikan satu per satu.",
+  "Tersenyumlah, pekerjaan terasa lebih ringan bersama hati yang gembira.",
+  "Disiplin adalah jembatan antara tujuan dan pencapaian.",
+  "Belajar sedikit setiap hari, dan kamu akan melesat jauh.",
+  "Pekerjaan yang diselesaikan dengan baik adalah kebanggaan yang tak ternilai.",
+  "Kolaborasi yang baik mengubah rencana biasa menjadi hasil luar biasa.",
+  "Mulai hari dengan syukur, akhiri dengan bangga.",
+  "Orang hebat dibentuk oleh kebiasaan kecil yang dilakukan setiap hari.",
+  "Jaga kesehatan, jaga semangat, jaga integritas.",
+  "Di rumah sakit setiap detik berarti, dan kerjamu ikut menjaganya.",
+  "Teruslah berkembang, karena rasa ingin tahu adalah bahan bakar terbaik.",
+  "Selesaikan dengan teliti, serahkan dengan tenang.",
+  "Hari yang melelahkan akan menjadi cerita tentang ketangguhanmu."
+];
+const QUOTE_SPEED = 45;   // piksel per detik (makin kecil makin lambat)
+let lastQuote = -1;
+const calmMotion = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+function quoteDuration(){
+  const el = $("qtext"); if (calmMotion) return;
+  el.style.animationDuration = (el.offsetWidth / QUOTE_SPEED).toFixed(1) + "s";
+}
+function setQuote(){
+  let i; do { i = Math.floor(Math.random() * QUOTES.length); } while (i === lastQuote && QUOTES.length > 1);
+  lastQuote = i;
+  const el = $("qtext");
+  el.textContent = "\u201C" + QUOTES[i] + "\u201D";
+  if (calmMotion) return;
+  el.style.animation = "none"; void el.offsetWidth;
+  el.style.animation = "qscroll 60s linear infinite";
+  quoteDuration();
+}
+window.addEventListener("resize", quoteDuration);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(quoteDuration);
 const slotOf = d => d.getHours() * 2 + (d.getMinutes() >= 30 ? 1 : 0);
 let bgSlot = -1;
 function loadFirst(urls, done){
@@ -216,6 +287,7 @@ function applyBg(d){
   const slot = slotOf(d);
   if (slot === bgSlot) return; bgSlot = slot;
   applyPalette(slot % 4);
+  setQuote();
   loadFirst(slotUrls(slot), url => {
     if (!url || slot !== bgSlot) return;           // semua gagal: tetap latar gelap polos
     const holder = $("bg"), old = Array.from(holder.querySelectorAll(".bglayer"));
