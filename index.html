@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>JAM IT RSBY</title>
+<title>Jam IT RSBY</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
@@ -21,7 +21,7 @@
     -webkit-font-smoothing:antialiased;
   }
   #bg{position:fixed;inset:0;z-index:-1;background:#090d16;overflow:hidden}
-  .bglayer{position:absolute;inset:-2%;background:center/cover no-repeat;opacity:0;transition:opacity 1.6s ease;filter:blur(2px) saturate(.95)}
+  .bglayer{position:absolute;inset:-2%;background:center/cover no-repeat;opacity:0;transition:opacity 1.6s ease;filter:blur(1px) saturate(1)}
   .bglayer.on{opacity:1}
   /* lapisan gelap tipis agar teks tetap terbaca, tapi gambar masih jelas terlihat */
   #bg::after{content:"";position:absolute;inset:0;pointer-events:none;
@@ -141,7 +141,7 @@
 
   <div class="quote" aria-live="off"><span class="qtrack" id="qtext"></span></div>
 
-  <footer>Sumber data cuaca: BMKG (Badan Meteorologi, Klimatologi, dan Geofisika). Foto latar: Pexels dan Unsplash. Team IT RSBY 2026.</footer>
+  <footer>Sumber data cuaca: BMKG (Badan Meteorologi, Klimatologi, dan Geofisika). Foto latar: Pexels dan Unsplash.</footer>
 </main>
 
 <div class="pop" id="pop" role="dialog" aria-modal="true" aria-labelledby="popT">
@@ -149,7 +149,7 @@
     <div class="pop-ring"><svg viewBox="0 0 24 24" aria-hidden="true"><path id="popIcon" d="M3 11.5 12 4l9 7.5M5.5 10v9.5h13V10M10 19.5v-5h4v5"/></svg></div>
     <h2 id="popT">Waktunya Pulang</h2>
     <div class="pop-time" id="popTime">17:00</div>
-    <p id="popMsg">Terima kasih atas kerja keras hari ini. Selamat pulang dan hati-hati di jalan.</p>
+    <p id="popMsg">Terima kasih atas kerja keras hari ini, IT RSBY. Simpan pekerjaan Anda dan hati-hati di jalan.</p>
     <button id="popClose" type="button">Tutup</button>
   </div>
 </div>
@@ -174,35 +174,33 @@ if (q && /^\d{1,2}:\d{2}(:\d{2})?$/.test(q)) {
 }
 const getNow = () => new Date(Date.now() + OFFSET);
 
-/* Latar belakang: 48 gambar gratis (Pexels dan Unsplash), berganti tiap 30 menit.
-   4 tema bergantian: galaxy, teknologi, alam, mural (masing-masing 12 gambar).
+/* Latar belakang: 48 gambar gratis berkualitas tinggi (Pexels dan Unsplash), berganti tiap 30 menit.
+   3 tema bergantian: galaxy, alam, abstrak (masing-masing 16 gambar).
    Angka = ID foto Pexels, teks "photo-..." = ID foto Unsplash.
    Jika sebuah gambar gagal dimuat, dicoba gambar berikutnya di tema yang sama, lalu gambar cadangan Picsum. */
 const THEME_IMAGES = [
   // 0: galaxy
   [34470418,18417414,11427599,13058152,5462241,37142406,25463036,27554462,
-   "photo-1419242902214-272b3f66ee7a","photo-1534796636912-3b95b3ab5986","photo-1462331940025-496dfbfc7564","photo-1444703686981-a3abbc4d4fe3"],
-  // 1: teknologi
-  [17323801,5480781,6466141,5408005,5203849,17489163,17489150,1148820,4508751,37605913,
-   "photo-1518770660439-4636190af475","photo-1550751827-4bd374c3f58b"],
-  // 2: alam
-  [17038850,17038848,36388602,17038851,16831439,17038849,9290337,29030840,16913242,17441819,37792729,12094417],
-  // 3: mural
-  [6502327,2119706,11310849,37759259,4640871,6073484,13765406,3053859,430209,1707640,32439576,706335]
+   935468,982384,1564334,11645094,4254548,7888270,13872805,36983507],
+  // 1: alam
+  [17038850,17038848,36388602,17038851,16831439,17038849,9290337,29030840,
+   16913242,17441819,37792729,12094417,141774,40335315,16810521,"photo-1470071459604-3b5ec3a7fe05"],
+  // 2: abstrak
+  [18541712,18541700,18541701,7135065,7134981,7134993,7130540,6985003,
+   6985001,7135010,7130555,7130498,7130491,7130573,7135005,"photo-1557682250-33bd709cbe85"]
 ];
 const imgUrl = v => typeof v === "number"
-  ? "https://images.pexels.com/photos/" + v + "/pexels-photo-" + v + ".jpeg?auto=compress&cs=tinysrgb&w=1366"
-  : "https://images.unsplash.com/" + v + "?auto=format&fit=crop&w=1366&q=70";
+  ? "https://images.pexels.com/photos/" + v + "/pexels-photo-" + v + ".jpeg?auto=compress&cs=tinysrgb&w=1920"
+  : "https://images.unsplash.com/" + v + "?auto=format&fit=crop&w=1920&q=80";
 function slotUrls(slot){            // slot 0..47; tema bergantian tiap slot agar tidak monoton
-  const t = THEME_IMAGES[slot % 4], i = Math.floor(slot / 4) % t.length;
-  return [imgUrl(t[i]), imgUrl(t[(i + 1) % t.length]), "https://picsum.photos/seed/rsby-" + slot + "/1366/768"];
+  const t = THEME_IMAGES[slot % 3], i = Math.floor(slot / 3) % t.length;
+  return [imgUrl(t[i]), imgUrl(t[(i + 1) % t.length]), "https://picsum.photos/seed/rsby-" + slot + "/1920/1080"];
 }
-/* Warna teks mengikuti tema gambar: galaxy (amethyst), teknologi (es platinum), alam (hijau sage), mural (rose gold) */
+/* Warna teks mengikuti tema gambar: galaxy (amethyst), alam (hijau sage), abstrak (biru es platinum) */
 const PALETTES = [
   {ac:"#c9bcff", ac2:"#a396e0", clock:"#f6f2ff", date:"#ddd6f3", ink:"#efeaff", soft:"#b8b2d4", line:"rgba(201,188,255,.26)", glow:"rgba(150,125,255,.38)", tint:"rgba(140,110,255,.10)"},
-  {ac:"#9adbe9", ac2:"#6db4c6", clock:"#f1fafd", date:"#d3e7ee", ink:"#eaf6fa", soft:"#a5bfc9", line:"rgba(154,219,233,.26)", glow:"rgba(90,200,230,.34)", tint:"rgba(80,190,225,.10)"},
   {ac:"#b9e6c6", ac2:"#86bc9b", clock:"#f4fbf5", date:"#d8eadc", ink:"#ecf6ee", soft:"#abc3b1", line:"rgba(185,230,198,.26)", glow:"rgba(120,205,150,.32)", tint:"rgba(110,200,140,.10)"},
-  {ac:"#f4c9ad", ac2:"#d19f84", clock:"#fff6ef", date:"#f0dccf", ink:"#fbefe8", soft:"#cbb5a8", line:"rgba(244,201,173,.28)", glow:"rgba(240,160,125,.34)", tint:"rgba(235,150,115,.10)"}
+  {ac:"#9adbe9", ac2:"#6db4c6", clock:"#f1fafd", date:"#d3e7ee", ink:"#eaf6fa", soft:"#a5bfc9", line:"rgba(154,219,233,.26)", glow:"rgba(90,200,230,.34)", tint:"rgba(80,190,225,.10)"}
 ];
 function applyPalette(i){
   const p = PALETTES[i], r = document.documentElement.style;
@@ -286,7 +284,7 @@ function loadFirst(urls, done){
 function applyBg(d){
   const slot = slotOf(d);
   if (slot === bgSlot) return; bgSlot = slot;
-  applyPalette(slot % 4);
+  applyPalette(slot % 3);
   setQuote();
   loadFirst(slotUrls(slot), url => {
     if (!url || slot !== bgSlot) return;           // semua gagal: tetap latar gelap polos
@@ -348,7 +346,7 @@ function showPop(kind){
   $("pop").classList.add("show");
   $("popClose").focus({preventScroll:true});
   chime();
-  clearTimeout(popTimer); popTimer = setTimeout(closePop, 5*60*1000);
+  clearTimeout(popTimer); popTimer = setTimeout(closePop, 120*1000);
 }
 function closePop(){ $("pop").classList.remove("show"); }
 $("popClose").addEventListener("click", closePop);
