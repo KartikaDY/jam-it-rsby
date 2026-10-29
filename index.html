@@ -40,7 +40,7 @@
     font-variant-numeric:tabular-nums;color:var(--clock);text-shadow:0 2px 30px rgba(0,0,0,.55),0 0 80px var(--glow)}
   .clock .c{color:var(--ac);opacity:.55;margin:0 .03em;position:relative;top:-.05em}
   .clock .s{color:var(--ac)}
-  .date{text-shadow:0 2px 16px rgba(0,0,0,.7);text-align:center;font-weight:300;font-size:1.45rem;letter-spacing:.07em;color:var(--date);margin-top:-1vh}
+  .date{text-shadow:0 2px 4px rgba(0,0,0,.85),0 0 22px rgba(0,0,0,.75);text-align:center;font-weight:600;font-size:1.5rem;letter-spacing:.06em;color:var(--clock);margin-top:-1vh}
 
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:2vh clamp(12px,1.6vw,22px)}
   @media(max-width:760px){.grid{grid-template-columns:1fr}}
@@ -141,7 +141,7 @@
 
   <div class="quote" aria-live="off"><span class="qtrack" id="qtext"></span></div>
 
-  <footer>Powered By : Team IT RSBY 2026.</footer>
+  <footer>Sumber data cuaca: BMKG (Badan Meteorologi, Klimatologi, dan Geofisika). Foto latar: Pexels dan Unsplash.</footer>
 </main>
 
 <div class="pop" id="pop" role="dialog" aria-modal="true" aria-labelledby="popT">
@@ -149,7 +149,7 @@
     <div class="pop-ring"><svg viewBox="0 0 24 24" aria-hidden="true"><path id="popIcon" d="M3 11.5 12 4l9 7.5M5.5 10v9.5h13V10M10 19.5v-5h4v5"/></svg></div>
     <h2 id="popT">Waktunya Pulang</h2>
     <div class="pop-time" id="popTime">17:00</div>
-    <p id="popMsg">Terima kasih atas kerja keras hari ini. Selamat pulang dan hati-hati di jalan.</p>
+    <p id="popMsg">Terima kasih atas kerja keras hari ini, IT RSBY. Simpan pekerjaan Anda dan hati-hati di jalan.</p>
     <button id="popClose" type="button">Tutup</button>
   </div>
 </div>
@@ -245,7 +245,7 @@ const QUOTES = [
   "Di rumah sakit setiap detik berarti, dan kerjamu ikut menjaganya.",
   "Teruslah berkembang, karena rasa ingin tahu adalah bahan bakar terbaik.",
   "Selesaikan dengan teliti, serahkan dengan tenang.",
-  "SELAMAT DATANG MAS PANDI, JANGAN LUPA NGOPI."
+  "Hari yang melelahkan akan menjadi cerita tentang ketangguhanmu."
 ];
 const QUOTE_SPEED = 45;   // piksel per detik (makin kecil makin lambat)
 let lastQuote = -1;
